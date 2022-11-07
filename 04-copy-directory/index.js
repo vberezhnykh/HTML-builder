@@ -1,17 +1,22 @@
 import * as fs from 'fs';
-import { mkdir, readdir, copyFile, writeFile } from "fs/promises";
+import { mkdir, readdir, copyFile, writeFile, rm } from "fs/promises";
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 try {
-    fs.mkdir('files-copy', { recursive: true }, async (err) => {
+    await rm(path.join(__dirname, 'files-copy'), { recursive: true, force: true });
+    fs.mkdir(path.join(__dirname, 'files-copy'), { recursive: true }, async (err) => {
         if (err) {
             console.log(err.message);
         } else {
-            const files = await readdir('files', {withFileTypes: true});
+            const files = await readdir(path.join(__dirname, 'files'), {withFileTypes: true});
             for (let file of files) {
-                await writeFile(`./files-copy/${file.name}`, '', async (err) => {
+                await writeFile(path.join(__dirname, `./files-copy/${file.name}`), '', async (err) => {
                     if (err) console.log(err.message);
                 });
-                await copyFile(`./files/${file.name}`, `./files-copy/${file.name}`);
+                await copyFile(path.join(__dirname, `./files/${file.name}`), path.join(__dirname, `./files-copy/${file.name}`));
             }
         }
     }) 
