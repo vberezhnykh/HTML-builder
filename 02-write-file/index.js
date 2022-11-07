@@ -1,10 +1,13 @@
 import * as readline from 'node:readline/promises';
 import { stdin as input, stdout as output } from 'process';
 import * as fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const rl = readline.createInterface( {input, output });
-
-const outputFile = fs.createWriteStream('result.txt');
+const outputFile = fs.createWriteStream(path.join(__dirname, 'result.txt'));
 
 console.log('Напиши что-нибудь, чтобы сохранить в файл...\n')
 rl.on('line', (input) => {
